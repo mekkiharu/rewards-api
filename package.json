@@ -1,0 +1,32 @@
+{
+  "name": "rewards-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "postinstall": "link-module-alias",
+    "preinstall": "command -v link-module-alias && link-module-alias clean || true"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.3",
+    "express-validator": "^5.3.0",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.20",
+    "mkdirp": "^1.0.4",
+    "mongoose": "^5.3.2",
+    "multer": "^1.4.0"
+  },
+  "devDependencies": {
+    "link-module-alias": "^1.2.0",
+    "nodemon": "^1.18.4"
+  },
+  "_moduleAliases": {
+    "~": "."
+  }
+}
