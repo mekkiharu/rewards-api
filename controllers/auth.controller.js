@@ -13,6 +13,7 @@ const {
 	STATUS_UNAUTHORIZED,
 	STATUS_UNPROCESSABLE_ENTITY
 } = require('~/utils/constants/http-status');
+const { EXPIRY } = require('~/utils/constants/token');
 
 // Utils
 const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-handler');
@@ -71,7 +72,7 @@ const login = (req, res, next) => {
     .then(user => {
       if (!user) {
 				throwCustomError(
-					'User not found.', 
+					'Invalid email or password!', 
 					STATUS_UNAUTHORIZED.code
 				);
       }
@@ -93,14 +94,15 @@ const login = (req, res, next) => {
           userId: loadedUser._id.toString()
         },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: EXPIRY.hours }
       );
 
       res.status(STATUS_SUCCESS.code).json({
 				status: STATUS_SUCCESS,
 				data: { 
 					userId: loadedUser._id.toString(),
-					token
+					token,
+					expiresIn: EXPIRY.seconds
 				}
 			});
     })

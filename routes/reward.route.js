@@ -29,7 +29,7 @@ module.exports = (router) => {
 		rewardController.updateReward
 	);
 	router.put(
-		'/reward/:rewardId/redeem',
+		'/reward/redeem/:rewardId',
 		rewardController.redeemReward
 	);
 

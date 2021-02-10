@@ -12,9 +12,9 @@ const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-
 module.exports = (req, res, next) => {
 	const { url, method } = req;
 	
-	const isPublicEndpoint = _.find(publicEndpoints, { url, method });
+	const inPublicEndpoints = _.find(publicEndpoints, { url, method });
 
-	if (!isPublicEndpoint) {
+	if (!inPublicEndpoints) {
 		const authHeader = req.get('Authorization');
 
 		if (!authHeader) {

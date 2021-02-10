@@ -15,7 +15,7 @@ const getUser = (req, res, next) => {
     .then(user => {
       if (!user) {
 				throwCustomError(
-					'User not found.', 
+					'Invalid email or password.', 
 					STATUS_NOT_FOUND.code
 				);
       }

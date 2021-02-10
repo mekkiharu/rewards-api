@@ -34,7 +34,7 @@ app.use(multer({
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // Response headers
-app.use(resHeaders);
+resHeaders(app);
 
 // App routes
 routes(app);

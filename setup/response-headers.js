@@ -1,19 +1,15 @@
-const resHeaders = (req, res, next) => {
-	const allowedOrigin = process.env.CLIENT_ORIGIN || '*';
+// Libraries
+const corsMiddleware = require('cors');
 
-  res.setHeader(
-		'Access-Control-Allow-Origin', 
-		allowedOrigin
-	);
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader(
-		'Access-Control-Allow-Headers', 
-		'Content-Type, Authorization'
-	);
-  next();
+module.exports = (app) => {
+	// allows client origin only if not in development
+	const allowedOrigins = process.env.NODE_ENV === 'development' ? '*' : process.env.CLIENT_ORIGIN;
+	
+	const cors = corsMiddleware({
+		maxAge: 5,
+		origins: allowedOrigins,
+		allowHeaders: ['Authorization'],
+	});
+
+	app.use(cors);
 };
-
-module.exports = resHeaders;
