@@ -26,8 +26,8 @@ const {
 const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-handler');
 
 const getRewards = (req, res, next) => {
-  const currentPage = req.query.currentPage || DEFAULT_CURRENT_PAGE;
-  const itemsPerPage = req.query.itemsPerPage || DEFAULT_ITEMS_PER_PAGE;
+  const currentPage = parseInt(req.query.currentPage) || DEFAULT_CURRENT_PAGE;
+  const itemsPerPage = parseInt(req.query.itemsPerPage) || DEFAULT_ITEMS_PER_PAGE;
   let totalCount;
   
 	Reward.find()
@@ -45,9 +45,9 @@ const getRewards = (req, res, next) => {
 				data: {
 					rewards,
 					pagination: {
-						totalCount,
-						currentPage,
-						itemsPerPage,
+						totalCount: totalCount,
+						currentPage: currentPage,
+						itemsPerPage: itemsPerPage,
 						pageCount: Math.ceil(totalCount / itemsPerPage)
 					}
 				}
@@ -60,6 +60,7 @@ const getRewards = (req, res, next) => {
 
 const getReward = (req, res, next) => {
   const rewardId = req.params.rewardId;
+	console.log('rewardId::', rewardId);
   
 	Reward.findById(rewardId)
     .then(reward => {
