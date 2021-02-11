@@ -1,3 +1,10 @@
+# app
 node_modules
 .env
-assets/*
+
+# assets
+assets/*.png
+assets/*.jpg
+assets/*.jpeg
+assets/*.gif
+assets/*.svg
