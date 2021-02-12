@@ -29,6 +29,7 @@ const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-
 const { uploadFile } = require('~/utils/helpers/uploader.js');
 
 const getRewards = (req, res, next) => {
+	// get pagination query params
   const currentPage = parseInt(req.query.currentPage) || DEFAULT_CURRENT_PAGE;
   const itemsPerPage = parseInt(req.query.itemsPerPage) || DEFAULT_ITEMS_PER_PAGE;
   let totalCount;
@@ -38,6 +39,7 @@ const getRewards = (req, res, next) => {
     .then(count => {
       totalCount = count;
 
+			// get rewards based on pagination details
       return Reward.find()
         .skip((currentPage - 1) * itemsPerPage)
         .limit(itemsPerPage);
@@ -110,10 +112,12 @@ const addReward = async (req, res, next) => {
 			);
 		}
 
+		// get reward details
 		const name = req.body.name;
 		const description = req.body.description;
 		const quantity = req.body.quantity;
 
+		// create and save reward
 		const reward = new Reward({
 			name,
 			description,
@@ -141,8 +145,11 @@ const addReward = async (req, res, next) => {
 };
 
 const updateReward = (req, res, next) => {
-  const rewardId = req.params.rewardId;
+	// get validation error result
   const errors = validationResult(req);
+
+	// get reward id
+  const rewardId = req.params.rewardId;
   
 	if (!errors.isEmpty()) {
 		throwCustomError(
@@ -167,6 +174,7 @@ const updateReward = (req, res, next) => {
 			);
 		}
 
+		// get reward details
 		const name = req.body.name;
 		const description = req.body.description;
 		const quantity = req.body.quantity;
@@ -180,6 +188,7 @@ const updateReward = (req, res, next) => {
 					);
 				}
 
+				// update reward details
 				reward.name = name;
 				reward.description = description;
 				reward.quantity = quantity;
@@ -206,6 +215,7 @@ const deleteReward = (req, res, next) => {
 
   Reward.findById(rewardId)
     .then(reward => {
+			// check if reward exists
       if (!reward) {
 				throwCustomError(
 					'Reward not found.', 

@@ -12,6 +12,7 @@ const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-
 module.exports = (req, res, next) => {
 	const { url, method } = req;
 	
+	// don't do authorization check for public endpoints
 	const inPublicEndpoints = _.find(publicEndpoints, { url, method });
 
 	if (!inPublicEndpoints) {
@@ -24,10 +25,12 @@ module.exports = (req, res, next) => {
 			);
 		}
 
+		// get jwt token
 		const token = authHeader.split(' ')[1];
 		let decodedToken;
 
 		try {
+			// verify and get token details
 			decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 		} catch (err) {
       throwInternalError(err, next);
@@ -40,6 +43,7 @@ module.exports = (req, res, next) => {
 			);
 		}
 
+		// pass user id to whole app request
 		req.userId = decodedToken.userId;
 	}
 

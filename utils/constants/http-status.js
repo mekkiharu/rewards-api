@@ -13,7 +13,6 @@ exports.STATUS_NO_CONTENT = {
 	'code': 204
 };
 
-
 exports.STATUS_BAD_REQUEST = {
 	'message': 'Bad Request',
 	'code': 400

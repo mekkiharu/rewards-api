@@ -2,12 +2,20 @@
 const { STATUS_ERROR, STATUS_INTERNAL_SERVER_ERROR } = require('~/utils/constants/http-status');
 
 const errorHandler = (error, req, res, next) => {
-  console.log(error);
-	
+	// get error details
   const code = error.statusCode || STATUS_INTERNAL_SERVER_ERROR.code;
   const message = error.message;
   const errors = error.errors;
 
+	// log error
+	console.error('Error::', {
+		endpoint: req.url,
+		method: req.method,
+		code,
+		message
+	});
+
+	// return error response
   res.status(code).json({
 		status: {
 			code,

@@ -1,6 +1,7 @@
 // Libraries
 const multer = require('multer');
 
+// Use memory storage
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, callback) => {

@@ -11,7 +11,11 @@ const userRoutes = require('~/routes/user.route');
 const authMiddleware = require('~/middlewares/auth.middleware');
 
 module.exports = (app) => {
+	// Root endpoints
 	app.get('/', (req, res) => {
+		res.sendStatus(200);
+	});
+	app.get('/api', (req, res) => {
 		res.sendStatus(200);
 	});
 

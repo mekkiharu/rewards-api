@@ -19,6 +19,7 @@ const { EXPIRY } = require('~/utils/constants/token');
 const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-handler');
 
 const register = (req, res, next) => {
+	// get validation error result
   const errors = validationResult(req);
 	
   if (!errors.isEmpty()) {
@@ -29,13 +30,16 @@ const register = (req, res, next) => {
 		);
   }
 
+	// get registration details
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
 
+	// encrypt user password
   bcrypt
     .hash(password, 12)
     .then(hashedPw => {
+			// save new user
       const user = new User({
         email: email,
         password: hashedPw,
@@ -44,6 +48,7 @@ const register = (req, res, next) => {
       return user.save();
     })
     .then(user => {
+			// return user details as response
 			const userDetails = {
 				id: user._id,
 				name: user.name,
@@ -64,6 +69,7 @@ const register = (req, res, next) => {
 };
 
 const login = (req, res, next) => {
+	// get login details
   const email = req.body.email || '';
   const password = req.body.password || '';
   let loadedUser;
@@ -77,7 +83,10 @@ const login = (req, res, next) => {
 				);
       }
 
+			// get current user
       loadedUser = user;
+
+			// check if user password is correct
       return bcrypt.compare(password, user.password);
     })
     .then(isEqual => {
@@ -88,6 +97,7 @@ const login = (req, res, next) => {
 				);
       }
 
+			// get jwt token based on user information
       const token = jwt.sign(
         {
           email: loadedUser.email,
