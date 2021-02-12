@@ -1,7 +1,6 @@
 // Libraries
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
 const multer = require('multer');
 
 // Environment variables
@@ -10,8 +9,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Setup
-const { fileStorage, fileFilter } = require('~/setup/storage');
+const { storage, fileFilter } = require('~/setup/storage');
 const resHeaders = require('~/setup/response-headers');
+const swagger = require('~/setup/swagger');
 const database = require('~/setup/database');
 const routes = require('~/setup/routes');
 
@@ -26,15 +26,15 @@ app.use(bodyParser.json());
 
 // Multer
 app.use(multer({ 
-	storage: fileStorage, 
+	storage, 
 	fileFilter 
 }).single('imageUrl'));
 
-// Static files
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
 // Response headers
 resHeaders(app);
+
+// Swagger
+swagger(app);
 
 // App routes
 routes(app);

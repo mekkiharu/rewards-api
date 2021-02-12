@@ -1,0 +1,25 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6022f3a1e3d9e0a0450f6292
+        name:
+          type: string
+          example: Juan Dela Cruz
+        email:
+          type: string
+          format: email
+          example: juandelacruz@example.com
+        rewards:
+          type: array
+          items:
+            type: string
+            example: 6022f3a1e3d9e0a0450f6292
+      required:
+        - id
+        - name
+        - email
+        - rewards

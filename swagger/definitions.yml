@@ -1,0 +1,7 @@
+definitions:
+  User:
+    $ref: '#/components/schemas/User'
+  Reward:
+    $ref: '#/components/schemas/Reward'
+  Auth:
+    $ref: '#/components/schemas/Auth'

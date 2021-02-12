@@ -1,0 +1,54 @@
+components:
+  requestBodies:
+    AddRewardBody:
+      description: A multipart/form data with JSON object containing reward information and image
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              formData:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Reward 1
+                  description:
+                    type: string
+                    example: Proin dictum enim in orci facilisis, iaculis venenatis neque ultrices. Sed neque nisi, blandit ac purus at, accumsan fermentum orci.
+                  quantity:
+                    type: integer
+                    example: 5
+              imageUrl:
+                type: string
+                format: binary
+          encoding:
+            imageUrl:
+              contentType: image/png, image/jpeg, image/jpg, image/svg, image/gif, image/raw
+    UpadRewardBody:
+      description: A multipart/form data with JSON object containing reward information and image
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              formData:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Reward 1
+                  description:
+                    type: string
+                    example: Proin dictum enim in orci facilisis, iaculis venenatis neque ultrices. Sed neque nisi, blandit ac purus at, accumsan fermentum orci.
+                  quantity:
+                    type: integer
+                    example: 5
+              imageUrl:
+                type: string
+                format: binary
+          encoding:
+            imageUrl:
+              contentType: image/png, image/jpeg, image/jpg, image/svg, image/gif, image/raw

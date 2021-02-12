@@ -1,0 +1,8 @@
+# Describe Tags
+tags:
+- name: User
+  description: User-related endpoints
+- name: Reward
+  description: Reward-related endpoints
+- name: Auth
+  description: Auth-related endpoints

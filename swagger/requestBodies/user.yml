@@ -1,0 +1,13 @@
+components:
+  requestBodies:
+    UpdateUserBody:
+      description: A JSON object containing update user information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: Juan Dela Cruz

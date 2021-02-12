@@ -19,11 +19,14 @@ const {
 	STATUS_NO_CONTENT,
 	STATUS_NOT_FOUND,
 	STATUS_BAD_REQUEST,
-	STATUS_UNPROCESSABLE_ENTITY
+	STATUS_UNPROCESSABLE_ENTITY,
+	STATUS_INTERNAL_SERVER_ERROR,
+	STATUS_ERROR
 } = require('~/utils/constants/http-status');
 
 // Utils
 const { throwCustomError, throwInternalError } = require('~/utils/helpers/error-handler');
+const { uploadFile } = require('~/utils/helpers/uploader.js');
 
 const getRewards = (req, res, next) => {
   const currentPage = parseInt(req.query.currentPage) || DEFAULT_CURRENT_PAGE;
@@ -60,7 +63,6 @@ const getRewards = (req, res, next) => {
 
 const getReward = (req, res, next) => {
   const rewardId = req.params.rewardId;
-	console.log('rewardId::', rewardId);
   
 	Reward.findById(rewardId)
     .then(reward => {
@@ -82,7 +84,7 @@ const getReward = (req, res, next) => {
     });
 };
 
-const addReward = (req, res, next) => {
+const addReward = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -100,31 +102,42 @@ const addReward = (req, res, next) => {
 		);
   }
 
-  const name = req.body.name;
-  const description = req.body.description;
-  const quantity = req.body.quantity;
-  const imageUrl = req.file.path;
-	
-  const reward = new Reward({
-    name,
-    description,
-		quantity,
-    imageUrl: imageUrl
-  });
-	
-  reward
-    .save()
-    .then(result => {
-      res.status(STATUS_CREATED.code).json({
-				status: STATUS_CREATED,
-				data: {
-					reward
-				}
-      });
-    })
-    .catch(err => {
-      throwInternalError(err, next);
-    });
+	uploadFile(req.file, (imageUrl, err) => {
+		if (err) {
+			throwCustomError(
+				'Error uploading image.', 
+				STATUS_INTERNAL_SERVER_ERROR.code
+			);
+		}
+
+		const name = req.body.name;
+		const description = req.body.description;
+		const quantity = req.body.quantity;
+
+		const reward = new Reward({
+			name,
+			description,
+			quantity,
+			imageUrl
+		});
+		
+		reward
+			.save()
+			.then(result => {
+				res.status(STATUS_CREATED.code).json({
+					status: STATUS_CREATED,
+					data: {
+						reward
+					}
+				});
+			})
+			.catch(() => {
+				throwCustomError(
+					STATUS_ERROR.message, 
+					STATUS_ERROR.code
+				);
+			});
+	});
 };
 
 const updateReward = (req, res, next) => {
@@ -139,53 +152,53 @@ const updateReward = (req, res, next) => {
 		);
   }
 
-  const name = req.body.name;
-  const description = req.body.description;
-  const quantity = req.body.quantity;
-  let imageUrl = req.body.imageUrl;
-
-  if (req.file) {
-    imageUrl = req.file.path;
-  }
-
-  if (!imageUrl) {
+  if (!req.file) {
 		throwCustomError(
 			'No image provided.', 
 			STATUS_UNPROCESSABLE_ENTITY.code
 		);
   }
 
-  Reward.findById(rewardId)
-    .then(reward => {
-      if (!reward) {
-				throwCustomError(
-					'Reward not found.', 
-					STATUS_NOT_FOUND.code
-				);
-      }
+	uploadFile(req.file, (imageUrl, err) => {
+		if (err) {
+			throwCustomError(
+				'Error uploading image.', 
+				STATUS_INTERNAL_SERVER_ERROR.code
+			);
+		}
 
-      if (imageUrl !== reward.imageUrl) {
-        clearImage(reward.imageUrl);
-      }
+		const name = req.body.name;
+		const description = req.body.description;
+		const quantity = req.body.quantity;
 
-      reward.name = name;
-      reward.description = description;
-      reward.quantity = quantity;
-      reward.imageUrl = imageUrl;
-
-      return reward.save();
-    })
-    .then(reward => {
-      res.status(STATUS_SUCCESS.code).json({
-				status: STATUS_SUCCESS,
-				data: {
-					reward
+		Reward.findById(rewardId)
+			.then(reward => {
+				if (!reward) {
+					throwCustomError(
+						'Reward not found.', 
+						STATUS_NOT_FOUND.code
+					);
 				}
+
+				reward.name = name;
+				reward.description = description;
+				reward.quantity = quantity;
+				reward.imageUrl = imageUrl;
+
+				return reward.save();
+			})
+			.then(reward => {
+				res.status(STATUS_SUCCESS.code).json({
+					status: STATUS_SUCCESS,
+					data: {
+						reward
+					}
+				});
+			})
+			.catch(error => {
+				throwInternalError(error, next);
 			});
-    })
-    .catch(err => {
-      throwInternalError(err, next);
-    });
+		})
 };
 
 const deleteReward = (req, res, next) => {
@@ -199,9 +212,6 @@ const deleteReward = (req, res, next) => {
 					STATUS_NOT_FOUND.code
 				);
       }
-
-      clearImage(reward.imageUrl);
-
       return Reward.findByIdAndRemove(rewardId);
     })
     .then(result => {
@@ -275,11 +285,6 @@ const redeemReward = (req, res, next) => {
 		.catch(err => {
 			throwInternalError(err, next);
 		});
-};
-
-const clearImage = filePath => {
-  filePath = path.join(__dirname, '..', filePath);
-  fs.unlink(filePath, err => console.log(err));
 };
 
 module.exports = {

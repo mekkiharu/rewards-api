@@ -1,0 +1,26 @@
+components:
+  schemas:
+    Reward:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6022f3a1e3d9e0a0450f6292
+        name:
+          type: string
+          example: Reward 1
+        description:
+          type: string
+          example: Proin dictum enim in orci facilisis, iaculis venenatis neque ultrices. Sed neque nisi, blandit ac purus at, accumsan fermentum orci.
+        quantity:
+          type: integer
+          example: 5
+        imageUrl:
+          type: string
+          example: https://res.cloudinary.com/sprmke/image/upload/v1613029862/cogcrbyb9d1jjjbejaae.png
+      required:
+        - id
+        - name
+        - description
+        - quantity
+        - imageUrl

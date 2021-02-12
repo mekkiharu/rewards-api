@@ -1,0 +1,33 @@
+components:
+  requestBodies:
+    AuthLoginBody:
+      description: A JSON object containing login information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: juandelacruz@example.com
+              password:
+                type: string
+                example: Test123
+    AuthRegisterBody:
+      description: A JSON object containing register information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: Juan Dela Cruz
+              email:
+                type: string
+                example: juandelacruz@example.com
+              password:
+                type: string
+                example: Test123

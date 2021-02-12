@@ -1,0 +1,19 @@
+components:
+  schemas:
+    AuthData:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: 6022f3a1e3d9e0a0450f6292
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1pa2UxQHRlc3QuY29tIiwidXNlcklkIjoiNjAyNGJmZjExMjgyNTE3MDIyM2U2YmQ0IiwiaWF0IjoxNjEzMDg1MjkxLCJleHAiOjE2MTMwODg4OTF9.YvWed-DPRYTDcTsgu5_w_T7Cqj9EVwJMVK5wcLm5fA4
+        expiresIn:
+          type: integer
+          example: 3600
+          description: One hour token expiration
+      required:
+        - userId
+        - token
+        - expiresIn

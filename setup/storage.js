@@ -1,18 +1,7 @@
 // Libraries
 const multer = require('multer');
-const mkdirp = require('mkdirp');
 
-const fileStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-		const dest = 'assets';
-		mkdirp(dest)
-			.then(result => callback(null, dest))
-			.catch(err => callback(err, dest))
-  },
-  filename: (req, file, callback) => {
-    callback(null, `${new Date().toISOString()}-${file.originalname}`);
-  }
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, callback) => {
   if (
@@ -27,6 +16,6 @@ const fileFilter = (req, file, callback) => {
 };
 
 module.exports = {
-	fileStorage,
+	storage,
 	fileFilter
 }
